@@ -1,4 +1,4 @@
-package oop_M3;
+package m3_oop;
 
 import java.awt.Color;
 import java.awt.Graphics2D;

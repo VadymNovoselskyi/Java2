@@ -1,4 +1,4 @@
-package oop_M3;
+package m3_oop;
 
 /**
  * Klassen består av ett antal hjälpmetoder för att förenkla 
