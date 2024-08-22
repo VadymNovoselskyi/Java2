@@ -48,9 +48,9 @@ public class Game implements KeyListener{
 		
 		else if(keyDown.get("right") && !(player.getX() + speed > width - player.getWidth()))
 	        player.setDirectionX(1);
-		else if(keyDown.get("left") && !(player.getX() - speed < player.getWidth()))
+		else if(keyDown.get("left") && !(player.getX() - speed < 0))
 	    	player.setDirectionX(-1);
-		else if(keyDown.get("up") && !(player.getY() - speed < player.getHeight()))
+		else if(keyDown.get("up") && !(player.getY() - speed < 0))
 	    	player.setDirectionY(-1);
 		else if(keyDown.get("down") && !(player.getY() + speed > height - player.getHeight()))
 	    	player.setDirectionY(1);
@@ -114,4 +114,3 @@ public class Game implements KeyListener{
 	}
 	
 }
-

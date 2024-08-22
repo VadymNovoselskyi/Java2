@@ -1,14 +1,15 @@
-package m5_spel_01;
+package m6_spel;
 
 import java.awt.Image;
 import se.egy.graphics.*;
 
 public abstract class Entity implements Drawable {
 	private Image img;
-	private int x, y, speed, dx, dy;
-	private boolean active;
+	private double x, y;
+	private int speed, dx = 0, dy = 0;
+	private boolean active = true;
 	
-	public Entity(Image img, int x, int y, int speed) {
+	public Entity(Image img, double x, double y, int speed) {
 		this.img = img;
 		this.x = x;
 		this.y = y;
@@ -16,10 +17,10 @@ public abstract class Entity implements Drawable {
 	}
 	
 	public void draw(java.awt.Graphics2D g) {
-		g.drawImage(img, x, y, null);
+		g.drawImage(img, (int)x, (int)y, null);
 	}
 	
-	public abstract void move();
+	public abstract void move(long deltaTime);
 
 	public boolean isActive() {
 		return active;
@@ -37,11 +38,11 @@ public abstract class Entity implements Drawable {
 		return img;
 	}
 
-	public int getX() {
+	public double getX() {
 		return x;
 	}
 
-	public int getY() {
+	public double getY() {
 		return y;
 	}
 	
@@ -75,11 +76,11 @@ public abstract class Entity implements Drawable {
 		this.img = img;
 	}
 
-	public void setX(int x) {
+	public void setX(double x) {
 		this.x = x;
 	}
 
-	public void setY(int y) {
+	public void setY(double y) {
 		this.y = y;
 	}
 

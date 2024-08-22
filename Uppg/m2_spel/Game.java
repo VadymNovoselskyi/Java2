@@ -42,9 +42,9 @@ public class Game implements KeyListener{
 		
 		else if(keyDown.get("right") && !(player.getX() + step > width - player.getWidth()))
 	        player.setX(player.getX() + step);
-		else if(keyDown.get("left") && !(player.getX() - step < player.getWidth()))
+		else if(keyDown.get("left") && !(player.getX() - step < 0))
 	    	player.setX(player.getX() - step);
-		else if(keyDown.get("up") && !(player.getY() - step < player.getHeight()))
+		else if(keyDown.get("up") && !(player.getY() - step < 0))
 	        player.setY(player.getY() - step);
 		else if(keyDown.get("down") && !(player.getY() + step > height - player.getHeight()))
 	    	player.setY(player.getY() + step);
