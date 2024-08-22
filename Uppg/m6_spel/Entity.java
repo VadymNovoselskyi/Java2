@@ -1,6 +1,8 @@
 package m6_spel;
 
 import java.awt.Image;
+import java.awt.Rectangle;
+
 import se.egy.graphics.*;
 
 public abstract class Entity implements Drawable {
@@ -8,12 +10,14 @@ public abstract class Entity implements Drawable {
 	private double x, y;
 	private int speed, dx = 0, dy = 0;
 	private boolean active = true;
+	private Rectangle rectangle = null;
 	
 	public Entity(Image img, double x, double y, int speed) {
 		this.img = img;
 		this.x = x;
 		this.y = y;
 		this.speed = speed;
+		rectangle = new Rectangle((int)x, (int)y, img.getWidth(null), img.getHeight(null));
 	}
 	
 	public void draw(java.awt.Graphics2D g) {
@@ -22,6 +26,16 @@ public abstract class Entity implements Drawable {
 	
 	public abstract void move(long deltaTime);
 
+	public boolean collision(Entity entity) {
+	    getRectangle();
+	    return rectangle.intersects(entity.getRectangle());
+	}
+	
+	public Rectangle getRectangle(){
+	    rectangle.setLocation((int)x, (int)y);
+	    return rectangle;
+	}
+	
 	public boolean isActive() {
 		return active;
 	}

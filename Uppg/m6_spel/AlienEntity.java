@@ -12,7 +12,8 @@ public class AlienEntity extends Entity{
 	}
 	
 	public void move(long deltaTime) {
-		double y = super.getY();		
-		super.setY(y + speed * (deltaTime / 1000000000.0));
+		double y = super.getY();	
+		int dy = super.getDirectoinY();
+		super.setY(y + dy * speed * (deltaTime / 1000000000.0));
 	}
 }
