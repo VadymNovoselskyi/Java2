@@ -9,6 +9,6 @@
 	<classpathentry kind="src" path="resources"/>
 	<classpathentry kind="src" path="Uppg"/>
 	<classpathentry kind="src" path="Miniprojekts"/>
-	<classpathentry kind="lib" path="/Users/vadym/Downloads/se.egy.graphics.v6.9.6.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Vadym/Desktop/se.egy.graphics.v6.9.6.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

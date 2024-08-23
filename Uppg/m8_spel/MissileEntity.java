@@ -1,4 +1,4 @@
-package m6_spel;
+package m8_spel;
 
 import java.awt.Image;
 
