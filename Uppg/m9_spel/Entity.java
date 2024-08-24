@@ -9,7 +9,7 @@ public abstract class Entity implements Drawable {
 	private int speed, dx = 0, dy = 0;
 	private boolean active = true;
 	private Rectangle rectangle = null;
-	
+
 	public Entity(Image img, double x, double y, int speed) {
 		this.img = img;
 		this.x = x;
@@ -17,23 +17,23 @@ public abstract class Entity implements Drawable {
 		this.speed = speed;
 		rectangle = new Rectangle((int)x, (int)y, img.getWidth(null), img.getHeight(null));
 	}
-	
+
 	public void draw(java.awt.Graphics2D g) {
 		g.drawImage(img, (int)x, (int)y, null);
 	}
-	
+
 	public abstract void move(long deltaTime);
 
 	public boolean collision(Entity entity) {
-	    getRectangle();
-	    return rectangle.intersects(entity.getRectangle());
+		getRectangle();
+		return rectangle.intersects(entity.getRectangle());
 	}
-	
-	public Rectangle getRectangle(){
-	    rectangle.setLocation((int)x, (int)y);
-	    return rectangle;
+
+	public Rectangle getRectangle() { 
+		rectangle.setLocation((int)x, (int)y);
+		return rectangle;
 	}
-	
+
 	public boolean isActive() {
 		return active;
 	}
@@ -57,7 +57,7 @@ public abstract class Entity implements Drawable {
 	public double getY() {
 		return y;
 	}
-	
+
 	public void setActive(boolean active) {
 		this.active = active;
 	}
@@ -73,8 +73,8 @@ public abstract class Entity implements Drawable {
 	public int getDirectoinY() {
 		return dy;
 	}
-	
-	
+
+
 
 	public void setDirectionX(int dx) {
 		this.dx = dx;
