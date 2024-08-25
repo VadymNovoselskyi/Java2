@@ -9,6 +9,7 @@ import java.net.Socket;
 
 import m10_GameServer.Command;
 
+
 public class Communicator extends Thread{
 	private Socket socket;
 	private int port;
@@ -29,24 +30,22 @@ public class Communicator extends Thread{
 		this.start();
 	}
 
-	public void notifyServer(Command cmd, String data){
+	public void notifyServer(Command cmd, String data) {
 		out.println(cmd.toString() + "," + data);
 	}
 
-	public void notifyServer(Command cmd){
+	public void notifyServer(Command cmd) {
 		out.println(cmd.toString());
 	}
 
 
 	public void run() {
-
-		try{
+		try {
 			socket = new Socket(InetAddress.getByName(host), port);
 
 			out = new PrintWriter(socket.getOutputStream(), true);
 			in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 
-			//gameController.updatePlayerMap(Command.CONNECTED.toString());
 			notifyServer(Command.NEW_PLAYER);
 
 			while(!quit) {

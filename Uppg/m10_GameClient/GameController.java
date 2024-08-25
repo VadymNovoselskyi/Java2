@@ -1,25 +1,35 @@
 package m10_GameClient;
 
 import java.awt.Color;
-import java.io.IOException;
-import java.util.HashMap;
-
 import m10_GameServer.Command;
+import java.awt.Font;
+import java.io.File;
+import java.io.IOException;
+import java.net.URLDecoder;
+import java.util.HashMap;
 
 public class GameController extends Thread{
 	private GameFrame gameFrame;
+	private int gameWidth, gameHeight;
 	private Communicator communicator;
 	private HashMap<Integer,Player> playerMap = new HashMap<>();
 	private ClientPlayer me;
+	
+	private int fps = 30;
+	private volatile boolean gameRunning = true;
+	private boolean dead = false;
+	
+	private Font gameNameFont, gameOverFont;
 
-	private long lastUpdateTime;
-	private boolean gameRunning = true;
-
-	public GameController(GameFrame gameFrame, String host) throws IOException{
-		this.gameFrame = gameFrame;
-
+	public GameController(String host) throws IOException {
+		this(host, 800, 600);
+	}
+	public GameController(String host, int gameWidth, int gameHeight) throws IOException {
+		this.gameWidth = gameWidth;
+		this.gameHeight = gameHeight;
+		loadFonts();
+		gameFrame = new GameFrame(gameWidth, gameHeight);
 		communicator = new Communicator(this, host, 9001);
-
 	}
 
 	public void closeConnection(){
@@ -27,20 +37,20 @@ public class GameController extends Thread{
 	}
 
 	public void update(long deltaTime){
+		if(gameFrame.keyDown.get("right")) me.setDirectionX(1);
+		if(gameFrame.keyDown.get("left")) me.setDirectionX(-1);
+		if(gameFrame.keyDown.get("down")) me.setDirectionY(1);
+		if(gameFrame.keyDown.get("up")) me.setDirectionY(-1);
+		if(gameFrame.keyDown.get("esc") || gameFrame.keyDown.get("q")) communicator.notifyServer(Command.DISCONNECT);
+
+		if(me.update(deltaTime)) communicator.notifyServer(Command.MOVE, me.toString());
+		if(me.xPos < 0 || me.xPos > gameWidth || me.yPos < 0 || me.yPos > gameHeight) {
+			communicator.notifyServer(Command.DEAD);
+			dead = true;
+		}
+		
 		me.setDirectionX(0);
 		me.setDirectionY(0);
-
-		if(gameFrame.keyDown.get("right"))
-			me.setDirectionX(1);
-		if(gameFrame.keyDown.get("left"))
-			me.setDirectionX(-1);
-		if(gameFrame.keyDown.get("down"))
-			me.setDirectionY(1);
-		if(gameFrame.keyDown.get("up"))
-			me.setDirectionY(-1);
-
-		if(me.update(deltaTime))
-			communicator.notifyServer(Command.MOVE, me.toString());
 	}
 
 
@@ -54,7 +64,7 @@ public class GameController extends Thread{
 		int yPos = Integer.valueOf(dataList[3]);
 		int health = Integer.valueOf(dataList[4]);
 
-		switch(cmd){
+		switch(cmd) {
 		case CONNECTED:
 			me = new ClientPlayer(playerID,xPos, yPos, health);
 			me.setColor(Color.BLUE);
@@ -65,7 +75,7 @@ public class GameController extends Thread{
 			break;
 
 		case UPDATE_ALL:
-			for(int i = 1; i < dataList.length-1; i += 4 ){
+			for(int i = 1; i < dataList.length-1; i += 4 ) {
 				playerID = Integer.valueOf(dataList[i]);
 				xPos = Integer.valueOf(dataList[i+1]);
 				yPos = Integer.valueOf(dataList[i+2]);
@@ -86,20 +96,48 @@ public class GameController extends Thread{
 		case REMOVE:
 			playerMap.remove(playerID);
 			break;
+
+		case DISCONNECT:
+			communicator.closeConnection();
+			System.exit(0);
 		default:
+		}
+	}
+	
+	public void loadFonts() {
+		try {
+			String path = getClass().getResource("/droidlover.ttf").getFile();
+			path = URLDecoder.decode(path, "utf-8");
+			Font baseFont = Font.createFont(Font.TRUETYPE_FONT, new File(path));
+
+			gameNameFont = baseFont.deriveFont(30f);
+			gameOverFont = baseFont.deriveFont(100f);
+
+		} catch (Exception e) {
+			gameNameFont = new Font("Serif", Font.PLAIN, 32);
+			gameOverFont = new Font("Serif", Font.PLAIN, 150);
+			e.printStackTrace();
 		}
 	}
 
 	public void run() {
-		lastUpdateTime = System.nanoTime();
+		long lastUpdateTime = System.nanoTime(); 
+		double delay = 1e9 / fps;
 
-		while(gameRunning){
+		while(gameRunning) {
 			long deltaTime = System.nanoTime() - lastUpdateTime;
-			if(deltaTime > 33333333){
-				lastUpdateTime = System.nanoTime();
+
+			if(deltaTime > delay) {            	
 				update(deltaTime);
+				gameFrame.write("The best game ever", 10, 40, Color.BLUE, gameNameFont);
+				if(dead) gameFrame.write("You dead lol", Color.RED, gameOverFont);
 				gameFrame.render(playerMap);
+				lastUpdateTime = System.nanoTime();
 			}
+			else
+				try {
+					Thread.sleep((long) ((delay - deltaTime) / 1e6));
+				} catch (InterruptedException e) {}
 		}
 	}
 }

@@ -1,21 +1,17 @@
 package m10_GameClient;
 
 import java.io.IOException;
-
 import javax.swing.JOptionPane;
 
 public class GameMain {
-	private GameController gameController = null;
-	private GameFrame gameFrame;
-	private String host = "127.0.0.1";  // Byt ut!
+	private GameController gameController;
+	private String host = "127.0.0.1";
 
 	public GameMain(){
-		gameFrame = new GameFrame();
-
-		host = JOptionPane.showInputDialog("ServerAdress");
+		//host = JOptionPane.showInputDialog("Server Adress");
 
 		try {
-			gameController = new GameController(gameFrame, host);
+			gameController = new GameController(host, 800, 600);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
