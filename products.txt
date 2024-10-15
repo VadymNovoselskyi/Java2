@@ -1,0 +1,9 @@
+Cola,20,9,12,DRINK
+Lime,20,10,12,DRINK
+Snickers,10,10,12,SNACK
+Station Eleven,50,5,6,POCKETBOOK
+The Glass Hotel,50,5,6,POCKETBOOK
+Nuts,10,10,12,SNACK
+Sea of Tranqulity,50,5,6,POCKETBOOK
+Orange,20,10,12,DRINK
+Gum,10,10,12,SNACK
