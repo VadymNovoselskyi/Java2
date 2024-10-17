@@ -1,4 +1,4 @@
-Cola,20,9,12,DRINK
+Cola,20,10,12,DRINK
 Lime,20,10,12,DRINK
 Snickers,10,10,12,SNACK
 Station Eleven,50,5,6,POCKETBOOK
