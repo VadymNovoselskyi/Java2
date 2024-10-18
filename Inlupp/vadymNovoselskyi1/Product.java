@@ -4,10 +4,10 @@ public abstract class Product {
 	private String name;
 	private int cost;
 	private int quantity;
-	private int vat;
+	private double vat;
 	private ProductType type;
 	
-	public Product(String name, int cost, int quantity, int vat, ProductType type) {
+	public Product(String name, int cost, int quantity, double vat, ProductType type) {
 		this.name = name;
 		this.cost = cost;
 		this.quantity = quantity;
@@ -15,11 +15,13 @@ public abstract class Product {
 		this.type = type;
 	}
 
-	public void buy() {
-		quantity--;
+	public void buy() throws IllegalStateException {
+		if(quantity > 0) quantity--;
+		else throw new IllegalStateException();
 	}
-	public void buy(int purchaseQuantity) {
-		this.quantity -= purchaseQuantity;
+	
+	public void refill(int quantity) {
+		this.quantity += quantity;
 	}
 	
 	public int getQuantity() {
@@ -34,7 +36,7 @@ public abstract class Product {
 		return cost;
 	}
 
-	public int getVat() {
+	public double getVat() {
 		return vat;
 	}
 	

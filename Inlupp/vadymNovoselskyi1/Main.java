@@ -1,72 +1,42 @@
 package vadymNovoselskyi1;
 
-import javax.swing.*;
-import java.util.HashMap;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.time.format.DateTimeFormatter;  
+import java.time.LocalDateTime;    
 
 public class Main {
+	private static HashMap<String, Product> products = new HashMap<>();
+	private static ArrayList<Product> productsArray;
+	private static int productCount = 0;
+
+	private static DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");  
+
+	private static GUI gui;
 
 	public static void main(String[] args) {
-		HashMap<String, Product> products = new HashMap<>();
-		ArrayList<Product> productsArray = FileManagement.readProducts();
-		int productCount = 0;
+		productsArray = FileManagement.readProducts();
+
+		//omvandla ArrayList till HashMap
 		for(Product product : productsArray) {
 			products.put(product.getName(), product);
 			productCount++;
 		}
 
-		//JFrame init
-		JFrame jframe = new JFrame("Varuautomat");
-		jframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		jframe.setSize(500, 500);
-		jframe.setLayout(null);
-
-
-		//labels
-		JLabel nameLabel = new JLabel("Varuautomat");  
-		nameLabel.setBounds(200, 0, 100, 30);  
-		jframe.add(nameLabel);
+		gui = new GUI(products, productCount);
 		
-		JLabel itemBoughtLabel = new JLabel();  
-		itemBoughtLabel.setBounds(25, 100, 250, 50);
-		jframe.add(itemBoughtLabel);
-
-		//combobox
-		String[] itemNames = new String[productCount];
-		int i = 0;
-		for(Product product : products.values()) {
-			itemNames[i] = product.getName() +" --- "+ product.getCost()+"kr";
-			i++;
-		}
-
-		JComboBox comboBox = new JComboBox(itemNames);    
-		comboBox.setBounds(25, 50, 175, 25);  
-		jframe.add(comboBox);
+//		FileManagement.readCSV("refill01.csv", products);
+//		FileManagement.writeProducts(products.values());
+	}
 
 
-		//köp button
-		JButton buyButton = new JButton("Buy selected item");  
-		buyButton.setBounds(300, 50, 150, 25);  
-		jframe.add(buyButton);  
-
-		//visa jframe
-		jframe.revalidate();
-		jframe.repaint();
-		jframe.setVisible(true);
-
-
-		//event listeners
-		buyButton.addActionListener(new ActionListener() {  
-			public void actionPerformed(ActionEvent e) {  
-				String[] itemInfo = ((String) comboBox.getItemAt(comboBox.getSelectedIndex())).split(" --- ");
-				itemBoughtLabel.setText("Bought '" +itemInfo[0] +"' for " +itemInfo[1]);
-			}  
-		});  
+	public static void buyItem(Product item) throws IllegalStateException {
+		item.buy();
 
 		//spara resultater
 		FileManagement.writeProducts(products.values());
-	}
 
+		String log = "Date" + dtf.format(LocalDateTime.now()) +" --- VAT: " + Math.floor(Double.valueOf(100 * (item.getCost() - item.getCost() / (1 + item.getVat())))) / 100 +"kr";
+		FileManagement.writeToFile("logs.txt", log);
+	}
 }
